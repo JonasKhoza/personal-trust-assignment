@@ -33,34 +33,35 @@ are able to, and send your code back to us.
 
 #### Authentication
 1. As a non-authenticated user, I should have the ability to login to the application so that I can access the client list.
-Acceptance Criteria:
+**Acceptance Criteria:**
     - When a user is not authenticated, the navbar should show that they are not logged in
     - When a user is authenticated, the navbar should show the user logged in, e.g "Logged in as Joe Soap"
     - If the user is not authenticated, there should be a button on the navbar which allows the user to login
     - Login button should only be visible and available for non-authenticated users
 
 2. BONUS: As an authenticated user, I should have the ability to logout out of the application so that I can end my session
+**Acceptance Criteria:**
     - Logout button should only be visible and available for authenticated users
 
 #### Clients
 1. As a non-authenticated user, I should not be able to access the client list because it may contain confidential information.
-Acceptance Criteria:
+**Acceptance Criteria:**
     - Non-authenticated user should not be able to access client list endpoint
     - Non-authenticated user should not be able to see a nav button that directs them to the client list
 
 2. As an authenticated user, I would like to view only 20 clients at a time on the list so that it is manageable without having to scroll down the page
-Acceptance Criteria:
+**Acceptance Criteria:**
     - The client list should be paginated to only show 20 clients per page 
     - There should be a pagination form below the list allowing the user to access the following pages
     - The user should have the ability to access the first and last page of results
 
 3. As an authenticated user, I need the ability to search for my clients on name, surname and ID number so that I can easily find clients I am looking for.
-Acceptance Criteria:
+**Acceptance Criteria:**
     - Basic search bar above the client list, allowing user to enter either a name, surname or ID number which then filters the list on the server and filters the list accordingly
     - BONUS: Update the list in realtime as the user types in the search bar, even though it is searching on the server side (Welcome to use HTMX or other)
 
 4. As an authenticated user, I need the ability to add new clients along with their addresses, so that there details are stored and accessible via the client list.
-Acceptance Criteria:
+**Acceptance Criteria:**
    - The client list view should have a button for the user to create a new client
    - A form should open in a new page which allows the user to input the client details, as well as a Physical and Postal address
    - The client should have both a postal and physical address
@@ -68,7 +69,7 @@ Acceptance Criteria:
    - Unauthenticated user should not be able to create a client
 
 5. As an authenticated user, when I create a client, I need to validate the ID number to ensure it is a valid RSA ID number and there isn't already a client with that ID number.
-Acceptance Criteria:
+**Acceptance Criteria:**
    - As part of the form validation, the below needs to be validated on the server side, and display errors on the form if not valid:
      - Client's ID number is a valid South African ID number and validated against the Luhn algorithm. [Decoding your South African ID number](https://www.westerncape.gov.za/general-publication/decoding-your-south-african-id-number-0)
      - Ensure that a client with the same ID number doesn't already exist in the system
@@ -76,7 +77,7 @@ Acceptance Criteria:
 
 #### Client Relationships
 1. As an authenticated user, I need the ability to create relationships between clients, so that I am able to identify relatives of my clients.
-Acceptance Criteria:
+**Acceptance Criteria:**
    - This will require a new model to store client relationships 
    - On a client row in the client list row, include a button which directs the user to a form allowing them to add a client relationship
    - Allow the user to specify the nature of the relationship (e.g Husband, Wife, Father, Daughter) 
