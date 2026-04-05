@@ -16,3 +16,24 @@ Docker's default `depends_on` only ensures startup order, not readiness. This ch
 
 - **Decision: ** Added a conditonal check at `base.html` to conditionally render Clients nav item
 - **Reasoning: ** Improves UI/UX by hiding options that unauthemticated users cannot access.
+
+## 4. Login & Logout Navbar
+
+- **Decision:** Show `Clients` link, username, and `Logout` only if the user is authenticated.
+- **Reasoning:** Improves UX by showing relevant navigation based on authentication.
+- **Alternative:** Could show `Clients` link always but block access at the view level. Rejected because it’s less user-friendly.
+
+## 5. Django Auth Views
+
+- **Decision:** Use Django built-in `LoginView` and `LogoutView`.
+- **Reasoning:** Avoids reinventing authentication, works with existing `LoginRequiredMixin`.
+
+## 6.Authentication Tests
+
+**Decision:** Added automated tests for login/logout functionality and access control for client views.
+
+**Reasoning:**
+
+- Ensure that unauthenticated users cannot access the client list.
+- Confirm that login and logout behave as expected.
+- Verify that the navbar correctly displays login/logout links based on authentication state.
