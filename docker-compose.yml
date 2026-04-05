@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   project_web:
@@ -11,7 +11,8 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - project_postgres
+      project_postgres:
+        condition: service-healthy
     environment:
       - SECRET_KEY=${SECRET_KEY}
       - DJANGO_DEBUG=${DJANGO_DEBUG}
@@ -32,6 +33,10 @@ services:
       - POSTGRES_USER=${POSTGRES_USERNAME}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=${POSTGRES_DB}
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USERNAME}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 volumes:
   project_postgres_data:
