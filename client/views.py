@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import DetailView, ListView, TemplateView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
 from client.models import Address, Client
 from .forms import ClientForm, AddressFormSet
@@ -13,6 +14,30 @@ class HomeView(TemplateView):
 class ClientList(LoginRequiredMixin, ListView):
     model = Client
     template_name = "client_list.html"
+
+    def get(self, request, *args, **kwargs):
+        self.object_list = self.get_queryset()
+        
+        if request.headers.get("HX-Request"):
+            return render(request, "partials/client_table.html", {
+                "object_list": self.object_list
+            })
+
+        context = self.get_context_data()
+        return self.render_to_response(context)
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        query = self.request.GET.get("q")
+
+        if query:
+            queryset = queryset.filter(
+                Q(first_name__icontains=query) |
+                Q(last_name__icontains=query) |
+                Q(id_number__icontains=query)
+            )
+
+        return queryset
 
 
 class ClientDetailView(LoginRequiredMixin, DetailView):

@@ -36,7 +36,7 @@ class Client(models.Model):
             else:
                 total += digit
         return (total % 10) == 0
-
+        
 
              
 

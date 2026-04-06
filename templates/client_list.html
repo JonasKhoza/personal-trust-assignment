@@ -10,12 +10,38 @@
     {% endif %}
   </div>
   <div class="input-group rounded mb-3">
+    {% comment %}
+    <form method="GET" class="input-group rounded mb-3">
+      <input
+        type="search"
+        name="q"
+        value="{{ request.GET.q }}"
+        class="form-control rounded"
+        placeholder="Search by name, surname or ID"
+      />
+      <button class="btn btn-outline-primary" type="submit">Search</button>
+    </form>
+    {% endcomment %} {% comment %}
     <input
       type="search"
       class="form-control rounded"
       placeholder="Search"
       aria-label="Search"
       aria-describedby="search-addon"
+    />
+    {% endcomment %}
+
+    <input
+      type="search"
+      name="q"
+      value="{{ request.GET.q }}"
+      class="form-control rounded mb-3"
+      placeholder="Search..."
+      hx-get="{% url 'client_list' %}"
+      hx-trigger="keyup changed delay:300ms"
+      hx-target="#client-table"
+      hx-push-url="true"
+      hx-include="[name='q']"
     />
   </div>
   <table class="table table-bordered">
@@ -28,6 +54,7 @@
         <th scope="col">View Detail</th>
       </tr>
     </thead>
+    {% comment %}
     <tbody>
       {% for client in object_list %}
       <tr>
@@ -42,6 +69,11 @@
         </td>
       </tr>
       {% endfor %}
+    </tbody>
+    {% endcomment %}
+
+    <tbody id="client-table">
+      {% include "partials/client_table.html" %}
     </tbody>
   </table>
 </div>

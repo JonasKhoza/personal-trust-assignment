@@ -28,7 +28,7 @@ Docker's default `depends_on` only ensures startup order, not readiness. This ch
 - **Decision:** Use Django built-in `LoginView` and `LogoutView`.
 - **Reasoning:** Avoids reinventing authentication, works with existing `LoginRequiredMixin`.
 
-## 6.Authentication Tests
+## 6. Authentication Tests
 
 **Decision:** Added automated tests for login/logout functionality and access control for client views.
 
@@ -37,3 +37,7 @@ Docker's default `depends_on` only ensures startup order, not readiness. This ch
 - Ensure that unauthenticated users cannot access the client list.
 - Confirm that login and logout behave as expected.
 - Verify that the navbar correctly displays login/logout links based on authentication state.
+
+## 7. Create new client functionality
+
+## 8. Search
