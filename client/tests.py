@@ -1,7 +1,9 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.core.exceptions import ValidationError
 
+from .models import Client
 # Create your tests here.
 class AuthenticationTests(TestCase):
     def setUp(self):
@@ -38,3 +40,18 @@ class AuthenticationTests(TestCase):
         self.assertNotContains(response, "Clients")
         self.assertNotContains(response, "Logout")
         self.assertContains(response, "Login")
+
+class ClientModelTest(TestCase):
+    def test_valid_sa_id(self):
+        client = Client(first_name="Jonas",last_name="Khoza",id_number="8001015009087")
+        self.assertTrue(client.is_valid_sa_id())
+    def test_invalid_sa_id_format(self):
+        client = Client(first_name="Jonas",last_name="Khoza",id_number="12345")
+        self.assertFalse(client.is_valid_sa_id())
+
+    def test_clean_valid_id(self):
+        client = Client(first_name="Jonas",last_name="Khoza",id_number="8001015009087")
+        try:
+            client.clean()
+        except ValidationError:
+            self.fail("clean() raised ValidationError unexpectedly!")

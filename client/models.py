@@ -1,10 +1,46 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
+import re
 
 class Client(models.Model):
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
     id_number = models.CharField(max_length=250)
+
+    def clean(self):
+        """Validate SA ID number"""
+        if not self.is_valid_sa_id():
+            raise ValidationError({"id_number": "Invalid South African ID number."})
+        
+    def is_valid_sa_id(self):
+        """
+            Validate SA ID using Luhn Algorithm
+        """
+        id_num = self.id_number.strip()
+
+        if not re.fullmatch(r"\d{13}", id_num):
+            return False
+        
+        #Luhn check
+        reverse_id_gigits = [int(d) for d in reversed(id_num)]
+       
+        total = 0
+
+        for i, digit in enumerate(reverse_id_gigits):
+            if i % 2 == 1:  # every second digit
+                doubled_digit = digit * 2
+                if doubled_digit > 9:
+                    doubled_digit -= 9
+                total += doubled_digit
+            else:
+                total += digit
+        return (total % 10) == 0
+
+
+             
+
+
 
 
 class Address(models.Model):
