@@ -1,0 +1,10 @@
+{% extends 'base.html' %} {% block content %}
+<h1>Create New Client</h1>
+<form method="POST">
+  {% csrf_token %} {{ client_form.as_p }} {{ address_formset.management_form }}
+  {% for form in address_formset %}
+  <h3>Address {{ forloop.counter }}</h3>
+  {{ form.as_p }} {% endfor %}
+  <button type="submit">Create Client</button>
+</form>
+{% endblock %}

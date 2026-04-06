@@ -6,7 +6,7 @@ import re
 class Client(models.Model):
     first_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
-    id_number = models.CharField(max_length=250)
+    id_number = models.CharField(max_length=250, unique=True, error_messages={"id_number": "A user with ID already exists."})
 
     def clean(self):
         """Validate SA ID number"""

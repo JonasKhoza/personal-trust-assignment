@@ -1,32 +1,48 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="m-3">
-	<h1>Client List</h1>
-	<div class="input-group rounded mb-3">
-	  <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
-	    aria-describedby="search-addon" />
-	</div>
-	<table class="table table-bordered">
-	  <thead>
-	    <tr>
-	      <th scope="col">ID</th>
-	      <th scope="col">First Name</th>
-	      <th scope="col">Last Name</th>
-	      <th scope="col">ID Number</th>
-	      <th scope="col">View Detail</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-		{% for client in object_list %}
-		    <tr>
-		      <th scope="row">{{ client.pk }}</th>
-		      <td>{{ client.first_name }}</td>
-		      <td>{{ client.last_name }}</td>
-		      <td>{{ client.id_number }}</td>
-		      <td><a class="btn btn-primary" href="{% url 'client_detail' client.pk %}">View</a></td>
-		    </tr>
-		{% endfor %}
-	  </tbody>
-	</table>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>Client List</h1>
+
+    {% if user.is_authenticated %}
+    <a href="{% url 'client_create' %}" class="btn btn-success">
+      + New Client
+    </a>
+    {% endif %}
+  </div>
+  <div class="input-group rounded mb-3">
+    <input
+      type="search"
+      class="form-control rounded"
+      placeholder="Search"
+      aria-label="Search"
+      aria-describedby="search-addon"
+    />
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">ID Number</th>
+        <th scope="col">View Detail</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for client in object_list %}
+      <tr>
+        <th scope="row">{{ client.pk }}</th>
+        <td>{{ client.first_name }}</td>
+        <td>{{ client.last_name }}</td>
+        <td>{{ client.id_number }}</td>
+        <td>
+          <a class="btn btn-primary" href="{% url 'client_detail' client.pk %}"
+            >View</a
+          >
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}
