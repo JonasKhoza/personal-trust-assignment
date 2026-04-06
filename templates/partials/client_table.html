@@ -4,10 +4,14 @@
   <td>{{ client.first_name }}</td>
   <td>{{ client.last_name }}</td>
   <td>{{ client.id_number }}</td>
+
   <td>
     <a class="btn btn-primary" href="{% url 'client_detail' client.pk %}">
       View
     </a>
+  </td>
+  <td>
+    <a href="{% url 'add_relationship' client.id %}">Add Relationship</a>
   </td>
 </tr>
 {% empty %}

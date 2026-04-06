@@ -1,7 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
 
-from client.views import ClientDetailView, ClientList, HomeView, ClientCreateView
+from client.views import ClientDetailView, ClientList, HomeView, ClientCreateView,RelationshipCreateView
 urlpatterns = [
     path("", HomeView.as_view(), name="home"),
     path("login/", auth_views.LoginView.as_view(template_name="login.html"), name="login"),
@@ -9,5 +9,6 @@ urlpatterns = [
     path("clients/", ClientList.as_view(), name="client_list"),
     path("clients/<int:pk>/", ClientDetailView.as_view(), name="client_detail"),
     path("clients/new", ClientCreateView.as_view(), name='client_create'),
+    path("clients/<int:client_id>/relationships/add/", RelationshipCreateView.as_view(), name="add_relationship"),
 ]
  

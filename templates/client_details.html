@@ -1,27 +1,63 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="card m-3">
-  <div class="card-header">
-    Client
-  </div>
+  <div class="card-header">Client</div>
   <div class="card-body">
-	<p>First Name: {{ object.first_name }}</p>
-	<p>Last Name: {{ object.last_name }}</p>
-	<p>ID Number: {{ object.id_number }}</p>
+    <p>First Name: {{ object.first_name }}</p>
+    <p>Last Name: {{ object.last_name }}</p>
+    <p>ID Number: {{ object.id_number }}</p>
   </div>
 </div>
 <div class="card m-3">
-  <div class="card-header">
-   Relationships
-  </div>
+  <div class="card-header">Relationships</div>
   <div class="card-body">
+    {% if relationships %}
+    <ul class="list-group">
+      {% for rel in relationships %}
+      <li class="list-group-item">
+        {{ rel.client_to.first_name }} {{ rel.client_to.last_name }} is your
+        <strong>{{ rel.relationship_type }}</strong>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p>No relationships found.</p>
+    {% endif %}
   </div>
 </div>
 <div class="card m-3">
-  <div class="card-header">
-    Address
-  </div>
+  <div class="card-header">Address</div>
   <div class="card-body">
+    <h5>Physical Address</h5>
+    {% if physical_address %}
+    <p>
+      {{ physical_address.street_number }} {{ physical_address.street }}<br />
+      {{ physical_address.building }} {{ physical_address.unit_number }}<br />
+      {{ physical_address.area }}<br />
+      {{ physical_address.city }}<br />
+      {{ physical_address.province }}<br />
+      {{ physical_address.country }}<br />
+      {{ physical_address.code }}
+    </p>
+    {% else %}
+    <p>No physical address found.</p>
+    {% endif %}
+
+    <hr />
+
+    <h5>Postal Address</h5>
+    {% if postal_address %}
+    <p>
+      {{ postal_address.street_number }} {{ postal_address.street }}<br />
+      {{ postal_address.building }} {{ postal_address.unit_number }}<br />
+      {{ postal_address.area }}<br />
+      {{ postal_address.city }}<br />
+      {{ postal_address.province }}<br />
+      {{ postal_address.country }}<br />
+      {{ postal_address.code }}
+    </p>
+    {% else %}
+    <p>No postal address found.</p>
+    {% endif %}
   </div>
 </div>
 {% endblock %}

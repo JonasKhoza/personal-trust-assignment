@@ -37,11 +37,71 @@ class Client(models.Model):
                 total += digit
         return (total % 10) == 0
         
-
+    def __str__(self):
+        return f"{self.first_name} {self.last_name}"
              
 
+class Relationship(models.Model):
+    RELATIONSHIP_CHOICES = [
+        ("husband", "Husband"),
+        ("wife", "Wife"),
+        ("father", "Father"),
+        ("mother", "Mother"),
+        ("son", "Son"),
+        ("daughter", "Daughter"),
+        ("sibling", "Sibling"),
+    ]
 
+    client_from = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="relationships_from")
+    client_to = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="relationships_to")
+    relationship_type = models.CharField(max_length=20, choices=RELATIONSHIP_CHOICES)
 
+    class Meta:
+        unique_together = ("client_from", "client_to")  # prevents duplicate relationships
+
+    def save(self, *args, **kwargs):
+        # 1. Save the current instance first
+        super().save(*args, **kwargs)
+
+        
+        # use getattr to check if '_skip_inverse' was set on this instance
+        if getattr(self, '_skip_inverse', False):
+            return
+
+      
+        inverse_type = self.get_inverse_relationship()
+        if inverse_type:
+            # Check if inverse already exists
+            if not Relationship.objects.filter(
+                client_from=self.client_to, 
+                client_to=self.client_from
+            ).exists():
+                
+                # Create the inverse object but don't save it yet
+                inverse_rel = Relationship(
+                    client_from=self.client_to,
+                    client_to=self.client_from,
+                    relationship_type=inverse_type
+                )
+                
+                # set the flag: This prevents the recursion
+                inverse_rel._skip_inverse = True
+                inverse_rel.save()
+
+    def get_inverse_relationship(self):
+        inverse_map = {
+            "husband": "wife",
+            "wife": "husband",
+            "father": "son",
+            "mother": "daughter",
+            "son": "father",
+            "daughter": "mother",
+            "sibling": "sibling",
+        }
+        return inverse_map.get(self.relationship_type)
+    
+    def __str__(self):
+        return f"{self.client_from} is {self.relationship_type} of {self.client_to}"
 
 class Address(models.Model):
     client = models.ForeignKey(Client, on_delete=models.PROTECT)

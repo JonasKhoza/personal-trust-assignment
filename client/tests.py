@@ -2,8 +2,9 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.core.exceptions import ValidationError
+from django.db import IntegrityError,transaction
 
-from .models import Client
+from .models import Client, Relationship
 # Create your tests here.
 class AuthenticationTests(TestCase):
     def setUp(self):
@@ -55,3 +56,68 @@ class ClientModelTest(TestCase):
             client.clean()
         except ValidationError:
             self.fail("clean() raised ValidationError unexpectedly!")
+
+class RelationshipModelTest(TestCase):
+
+    def setUp(self):
+        self.john = Client.objects.create(
+            first_name="John",
+            last_name="Doe",
+            id_number="9001015009087"
+        )
+        self.jane = Client.objects.create(
+            first_name="Jane",
+            last_name="Doe",
+            id_number="9001010009088"
+        )
+
+    def test_inverse_relationship_created(self):
+        Relationship.objects.create(
+            client_from=self.john,
+            client_to=self.jane,
+            relationship_type="husband"
+        )
+
+        # Check original
+        self.assertTrue(
+            Relationship.objects.filter(
+                client_from=self.john,
+                client_to=self.jane,
+                relationship_type="husband"
+            ).exists()
+        )
+
+        # Check inverse
+        self.assertTrue(
+            Relationship.objects.filter(
+                client_from=self.jane,
+                client_to=self.john,
+                relationship_type="wife"
+            ).exists()
+        )
+
+    def test_no_duplicate_inverse_created(self):
+    
+        Relationship.objects.create(
+            client_from=self.john,
+            client_to=self.jane,
+            relationship_type="husband"
+        )
+
+        
+        with self.assertRaises(IntegrityError):
+            with transaction.atomic():  # This protects the rest of the test
+                Relationship.objects.create(
+                    client_from=self.john,
+                    client_to=self.jane,
+                    relationship_type="husband"
+                )
+
+        
+        count = Relationship.objects.filter(
+            client_from=self.jane,
+            client_to=self.john
+        ).count()
+        self.assertEqual(count, 1)
+
+    

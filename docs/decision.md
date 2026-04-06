@@ -40,4 +40,19 @@ Docker's default `depends_on` only ensures startup order, not readiness. This ch
 
 ## 7. Create new client functionality
 
+**Decision: ** Implemented client creation using a custom ClientCreateView with a ClientForm and AddressFormSet.
+** Reasoning: ** Allows simultaneous creation of a client and their associated addresses in a single request.
+
 ## 8. Search
+
+**Decision: ** Implemented client search using HTMX for dynamic, partial page updates.
+**Reasoning: ** Provides a smoother user experience by updating only the client table without a full page reload.
+**Implementation Detail: **
+
+- Used hx-get, hx-trigger, and hx-target for real-time search.
+- Server detects HX-Request header and returns a partial template (client_table.html).
+
+## 9. Client Relationships
+
+** Decision: ** Introduced a Relationship model to represent relationships between clients (e.g., husband, wife, parent, child).
+** Reasoning: ** Validation depends on client_from, which is injected at runtime and not available during model instantiation.
